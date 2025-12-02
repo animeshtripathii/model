@@ -1,7 +1,7 @@
 import pickle
 import numpy as np
 import pandas as pd
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -16,14 +16,20 @@ clf = pickle.load(open('recommender.pkl', 'rb'))
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    if request.method == 'POST':
-        features = [request.json.get('n'), request.json.get('p'), request.json.get('k'), request.json.get('temp'), request.json.get('hum'), request.json.get('ph'), request.json.get('rain')]
-        for i in range(len(features)):
-             features[i] = float(features[i])
-        print(features)
-        pred = clf.predict([features])
+    features = [
+        request.json.get('n'), 
+        request.json.get('p'), 
+        request.json.get('k'),
+        request.json.get('temp'), 
+        request.json.get('hum'), 
+        request.json.get('ph'), 
+        request.json.get('rain')
+    ]
 
-    return jsonify({'crop' : classes[pred[0]]})
+    features = [float(x) for x in features]
+
+    pred = clf.predict([features])
+    return jsonify({'crop': classes[pred[0]]})
 
 if __name__ == "__main__":
-    app.run(port = 9000)
+    app.run(port=9000)
