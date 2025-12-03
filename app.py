@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import CORS
 import joblib
 import pandas as pd
 import numpy as np
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes and origins
 
 # Load the trained model
 # Ensure 'crop_recommendation_model.pkl' is in the same folder as this script
